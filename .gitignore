@@ -1,0 +1,30 @@
+# Ignora la carpeta de dependencias de Node
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Entornos
+.env
+.env.*.local
+
+# Salidas de compilación
+dist/
+build/
+.out/
+.next/
+.cache/
+
+# IDEs y editores
+.vscode/
+.idea/
+
+# Otros
+*.local
