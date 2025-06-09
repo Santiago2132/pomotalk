@@ -18,6 +18,11 @@ export const grammarContent = [
       "General truths: Water boils at 100 degrees Celsius.",
       "Permanent states: She lives in London.",
       "Schedules and programs: The train leaves at 9 PM."
+    ],
+    material: [
+      { type: "video", title: "Present Simple Explained", url: "https://youtu.be/o8xOJPKfraU" },
+      { type: "quiz", title: "Present Simple Practice Quiz", url: "https://quizizz.com/join/quiz/60d0f948c557fd001ca791b3/start?studentShare=true" },
+      { type: "article", title: "Guide to Present Simple", url: "https://learnenglish.britishcouncil.org/grammar/english-grammar-reference/present-simple" }
     ]
   },
   {
@@ -39,6 +44,11 @@ export const grammarContent = [
       "Temporary situations: I'm staying with my parents until I find an apartment.",
       "Future arrangements: We are meeting John at the airport tomorrow.",
       "Trends: More people are using public transportation these days."
+    ],
+    material: [
+      { type: "video", title: "Present Continuous Tutorial", url: "https://youtu.be/Bcz-le6qEWk" },
+      { type: "quiz", title: "Present Continuous Quiz", url: "https://quizizz.com/join/quiz/62844a272e9998001d24b7cb/start?studentShare=true" },
+      { type: "article", title: "Understanding Present Continuous", url: "https://learnenglish.britishcouncil.org/grammar/english-grammar-reference/present-continuous" }
     ]
   },
   {
@@ -60,6 +70,11 @@ export const grammarContent = [
       "Past habits: She always walked to school when she was young.",
       "Narratives and historical events: Columbus discovered America in 1492.",
       "Past states: I was very happy when I lived in Spain."
+    ],
+    material: [
+      { type: "video", title: "Past Simple Lesson", url: "https://youtu.be/wLuNOWXw96c?si=BrsT8Xx0eA7jUpfP" },
+      { type: "quiz", title: "Past Simple Test", url: "https://quizizz.com/join/quiz/5f860688fea512001b8bd85f/start?studentShare=true" },
+      { type: "article", title: "Past Simple Explained", url: "https://learnenglish.britishcouncil.org/grammar/english-grammar-reference/past-simple" }
     ]
   },
   {
@@ -81,6 +96,11 @@ export const grammarContent = [
       "Interrupted actions: I was taking a shower when the phone rang.",
       "Describing the setting or context: The sun was shining and birds were singing.",
       "Parallel actions in the past: While I was cooking, my wife was setting the table."
+    ],
+    material: [
+      { type: "video", title: "Past Continuous Video", url: "https://youtu.be/k6qsMgVCW3s?si=7_S6X5u6UZtnYNg7" },
+      { type: "quiz", title: "Past Continuous Quiz", url: "https://quizizz.com/join/quiz/60fc2cdf07dff8001b82e950/start?studentShare=true" },
+      { type: "article", title: "Past Continuous Guide", url: "https://learnenglish.britishcouncil.org/grammar/english-grammar-reference/past-continuous" }
     ]
   },
   {
@@ -102,6 +122,11 @@ export const grammarContent = [
       "Recent actions with present result: I have lost my keys (and still don't have them).",
       "Actions that began in the past and continue: She has lived here for 10 years.",
       "With 'just', 'already', 'yet', 'ever', 'never': I have just arrived."
+    ],
+    material: [
+      { type: "video", title: "Present Perfect Overview", url: "https://youtu.be/6ATj9Do_RL8?si=xgjNY5EDlVcwZ60l" },
+      { type: "quiz", title: "Present Perfect Practice", url: "https://quizizz.com/join/quiz/6229e4d5018dcd001dd957f2/start?studentShare=true" },
+      { type: "article", title: "Mastering Present Perfect", url: "https://learnenglish.britishcouncil.org/grammar/b1-b2-grammar/present-perfect" }
     ]
   },
   {
@@ -124,6 +149,11 @@ export const grammarContent = [
       "Promises: I will always love you.",
       "Offers: I'll carry that bag for you.",
       "Threats or warnings: If you don't stop, I'll call the police."
+    ],
+    material: [
+      { type: "video", title: "Future Simple Basics", url: "https://youtu.be/vFQlDu_7XmY?si=Hz2xajtER3TgrQrv" },
+      { type: "quiz", title: "Future Simple Quiz", url: "https://quizizz.com/join/quiz/5ec16632e448e6001b837871/start?studentShare=true" },
+      { type: "article", title: "Future Simple Explained", url: "https://www.britishcouncil.org.mx/blog/future-simple" }
     ]
   }
 ];

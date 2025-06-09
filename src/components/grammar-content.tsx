@@ -10,6 +10,20 @@ export const GrammarContent: React.FC = () => {
   // Get the current grammar content
   const currentContent = grammarContent.find(item => item.id === selectedTense) || grammarContent[0];
 
+  // Function to get icon based on material type
+  const getMaterialIcon = (type: string) => {
+    switch (type) {
+      case "video":
+        return "lucide:youtube";
+      case "quiz":
+        return "lucide:puzzle";
+      case "article":
+        return "lucide:book";
+      default:
+        return "lucide:external-link";
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,7 +32,7 @@ export const GrammarContent: React.FC = () => {
     >
       <Card className="shadow-md border-none overflow-hidden bg-gradient-to-br from-green-500/10 to-teal-500/10">
         <CardHeader className="pb-0">
-          <h2 className="text-xl font-semibold">English Grammar Tenses</h2>
+          <h2 className="text-xl font-semibold">English Grammar Tenses🍀</h2>
         </CardHeader>
         <CardBody>
           <Tabs 
@@ -150,6 +164,25 @@ export const GrammarContent: React.FC = () => {
                       <Icon icon="lucide:zap" width={18} />
                     </div>
                     <p>{use}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-6 bg-white/50 backdrop-blur-sm rounded-xl p-5 shadow-sm border border-gray-100">
+              <h4 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
+                <Icon icon="lucide:book" />
+                Study Material
+              </h4>
+              <ul className="space-y-3">
+                {currentContent.material.map((material, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <div className="mt-1 text-blue-500 flex-shrink-0">
+                      <Icon icon={getMaterialIcon(material.type)} width={18} />
+                    </div>
+                    <a href={material.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      {material.title}
+                    </a>
                   </li>
                 ))}
               </ul>
