@@ -15,12 +15,12 @@ interface TimerSession {
 }
 
 export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ onCycleComplete }) => {
-  const WORK_TIME = 25 * 60; // 25 minutes in seconds
   const BREAK_TIME = 5 * 60; // 5 minutes in seconds
-
-  const [timeLeft, setTimeLeft] = React.useState<number>(WORK_TIME);
+  const [workDuration, setWorkDuration] = React.useState<number>(25 * 60); // Default to 25 minutes
+  const [timeLeft, setTimeLeft] = React.useState<number>(workDuration);
   const [isActive, setIsActive] = React.useState<boolean>(false);
   const [mode, setMode] = React.useState<TimerMode>("work");
+  const [endTime, setEndTime] = React.useState<number | null>(null);
   const [session, setSession] = React.useState<TimerSession>(() => {
     const savedSession = localStorage.getItem("pomodoroSession");
     return savedSession 
@@ -28,93 +28,80 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ onCycleComplete })
       : { completedPomodoros: 0, startTime: null };
   });
 
-  const intervalRef = React.useRef<number | null>(null);
+  // Update timeLeft when mode or workDuration changes and timer is not active
+  React.useEffect(() => {
+    if (!isActive) {
+      setTimeLeft(mode === "work" ? workDuration : BREAK_TIME);
+    }
+  }, [mode, workDuration, isActive]);
 
-  // Calculate progress percentage
-  const totalTime = mode === "work" ? WORK_TIME : BREAK_TIME;
-  const progress = ((totalTime - timeLeft) / totalTime) * 100;
+  // Timer logic using system time
+  React.useEffect(() => {
+    if (isActive && endTime) {
+      const intervalId = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.max(0, Math.ceil((endTime - now) / 1000));
+        setTimeLeft(remaining);
+        if (remaining <= 0) {
+          handleTimerComplete();
+        }
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }
+  }, [isActive, endTime]);
 
-  // Format time as MM:SS
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  // Handle timer completion
   const handleTimerComplete = () => {
-    const audio = new Audio("/notification.mp3");
+    const audio = new Audio("/notification.wav");
     audio.play().catch(e => console.log("Audio play failed:", e));
     
     if (mode === "work") {
-      // Update completed pomodoros
       const updatedSession = {
         ...session,
         completedPomodoros: session.completedPomodoros + 1,
       };
       setSession(updatedSession);
       localStorage.setItem("pomodoroSession", JSON.stringify(updatedSession));
-      
-      // Switch to break mode
       setMode("break");
       setTimeLeft(BREAK_TIME);
-      onCycleComplete(); // Trigger quote change
+      onCycleComplete();
     } else {
-      // Switch back to work mode
       setMode("work");
-      setTimeLeft(WORK_TIME);
+      setTimeLeft(workDuration);
     }
+    setIsActive(false);
+    setEndTime(null);
   };
 
-  // Timer logic
-  React.useEffect(() => {
-    if (isActive) {
-      intervalRef.current = window.setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(intervalRef.current!);
-            handleTimerComplete();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isActive, mode]);
-
-  // Save session to localStorage when it changes
-  React.useEffect(() => {
-    localStorage.setItem("pomodoroSession", JSON.stringify(session));
-  }, [session]);
-
-  // Start/pause timer
   const toggleTimer = () => {
-    if (!isActive && !session.startTime) {
-      // Starting a new session
-      setSession({
-        ...session,
-        startTime: Date.now(),
-      });
+    if (!isActive) {
+      if (!session.startTime) {
+        setSession({ ...session, startTime: Date.now() });
+      }
+      setEndTime(Date.now() + timeLeft * 1000);
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+      if (endTime) {
+        const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+        setTimeLeft(remaining);
+      }
     }
-    setIsActive(!isActive);
   };
 
-  // Reset timer
   const resetTimer = () => {
     setIsActive(false);
     setMode("work");
-    setTimeLeft(WORK_TIME);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    setTimeLeft(workDuration);
+    setEndTime(null);
+  };
+
+  const totalTime = mode === "work" ? workDuration : BREAK_TIME;
+  const progress = isActive ? ((totalTime - timeLeft) / totalTime) * 100 : 0;
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -130,6 +117,20 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ onCycleComplete })
           </h2>
         </CardHeader>
         <CardBody className="flex flex-col items-center gap-4">
+          {!isActive && (
+            <div className="flex justify-center gap-2 mb-4">
+              {[15, 25, 40].map((min) => (
+                <Button
+                  key={min}
+                  onPress={() => setWorkDuration(min * 60)}
+                  color={workDuration === min * 60 ? "primary" : "default"}
+                  variant={workDuration === min * 60 ? "solid" : "bordered"}
+                >
+                  {min} min
+                </Button>
+              ))}
+            </div>
+          )}
           <div className="w-full flex justify-center">
             <div className="relative w-40 h-40 flex items-center justify-center">
               <svg className="w-full h-full" viewBox="0 0 100 100">
@@ -162,7 +163,6 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ onCycleComplete })
               </div>
             </div>
           </div>
-
           <div className="flex gap-3 justify-center">
             <Button
               color={isActive ? "danger" : "primary"}
@@ -183,7 +183,6 @@ export const PomodoroTimer: React.FC<PomodoroTimerProps> = ({ onCycleComplete })
               Reset
             </Button>
           </div>
-
           <div className="w-full mt-4">
             <div className="flex justify-between text-sm text-gray-600 mb-1">
               <span>Completed Pomodoros</span>
